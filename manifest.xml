@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Thoughtrons Word Add-in — V1.0
+  Adds a "Thoughtrons" ribbon tab to Word with:
+    - Snippet Library (taskpane) — 18 brand-styled inserts, organised by category
+    - Quick Insert — 5 most-used snippets as one-click ribbon buttons
+    - Classification — 4 banners that stamp header & footer of every section
+
+  ============================================================
+  BEFORE FIRST DEPLOYMENT — REPLACE THE BASE URL
+  ============================================================
+  Find:    https://thoughtrons.github.io/word-addin
+  Replace: <your hosting URL — must be HTTPS, no trailing slash>
+  ============================================================
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>05cc9f6e-ca7d-4a05-9a74-5c6e08b9b8a3</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Thoughtrons</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Thoughtrons Word"/>
+  <Description DefaultValue="Brand-styled snippet library, classification stamps, and quick-insert toolbox for Thoughtrons Word documents."/>
+  <IconUrl DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/tab-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/tab-80.png"/>
+  <SupportUrl DefaultValue="https://thoughtrons.in/"/>
+
+  <AppDomains>
+    <AppDomain>https://thoughtrons.github.io</AppDomain>
+    <AppDomain>https://thoughtrons.in</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Document"/>
+  </Hosts>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://thoughtrons.github.io/word-addin/src/taskpane.html"/>
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Document">
+        <DesktopFormFactor>
+
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
+          </GetStarted>
+
+          <FunctionFile resid="Commands.Url"/>
+
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="ThoughtronsTab">
+
+              <Group id="GroupLibrary">
+                <Label resid="GroupLibrary.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.Library.16"/>
+                  <bt:Image size="32" resid="Icon.Library.32"/>
+                  <bt:Image size="80" resid="Icon.Library.80"/>
+                </Icon>
+                <Control xsi:type="Button" id="BtnLibrary">
+                  <Label resid="Btn.Library.Label"/>
+                  <Supertip><Title resid="Btn.Library.Label"/><Description resid="Btn.Library.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Library.16"/>
+                    <bt:Image size="32" resid="Icon.Library.32"/>
+                    <bt:Image size="80" resid="Icon.Library.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ThoughtronsLibrary</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+
+              <Group id="GroupQuick">
+                <Label resid="GroupQuick.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.Snippet.16"/>
+                  <bt:Image size="32" resid="Icon.Snippet.32"/>
+                  <bt:Image size="80" resid="Icon.Snippet.80"/>
+                </Icon>
+
+                <Control xsi:type="Button" id="BtnExecSum">
+                  <Label resid="Btn.ExecSum.Label"/>
+                  <Supertip><Title resid="Btn.ExecSum.Label"/><Description resid="Btn.ExecSum.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Snippet.16"/>
+                    <bt:Image size="32" resid="Icon.Snippet.32"/>
+                    <bt:Image size="80" resid="Icon.Snippet.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>insertExecSummary</FunctionName></Action>
+                </Control>
+
+                <Control xsi:type="Button" id="BtnActionItems">
+                  <Label resid="Btn.ActionItems.Label"/>
+                  <Supertip><Title resid="Btn.ActionItems.Label"/><Description resid="Btn.ActionItems.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Snippet.16"/>
+                    <bt:Image size="32" resid="Icon.Snippet.32"/>
+                    <bt:Image size="80" resid="Icon.Snippet.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>insertActionItems</FunctionName></Action>
+                </Control>
+
+                <Control xsi:type="Button" id="BtnRiskTbl">
+                  <Label resid="Btn.RiskTbl.Label"/>
+                  <Supertip><Title resid="Btn.RiskTbl.Label"/><Description resid="Btn.RiskTbl.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Snippet.16"/>
+                    <bt:Image size="32" resid="Icon.Snippet.32"/>
+                    <bt:Image size="80" resid="Icon.Snippet.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>insertRiskTable</FunctionName></Action>
+                </Control>
+
+                <Control xsi:type="Button" id="BtnMemoHdr">
+                  <Label resid="Btn.MemoHdr.Label"/>
+                  <Supertip><Title resid="Btn.MemoHdr.Label"/><Description resid="Btn.MemoHdr.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Snippet.16"/>
+                    <bt:Image size="32" resid="Icon.Snippet.32"/>
+                    <bt:Image size="80" resid="Icon.Snippet.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>insertMemoHeader</FunctionName></Action>
+                </Control>
+
+                <Control xsi:type="Button" id="BtnRefs">
+                  <Label resid="Btn.Refs.Label"/>
+                  <Supertip><Title resid="Btn.Refs.Label"/><Description resid="Btn.Refs.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Snippet.16"/>
+                    <bt:Image size="32" resid="Icon.Snippet.32"/>
+                    <bt:Image size="80" resid="Icon.Snippet.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>insertReferences</FunctionName></Action>
+                </Control>
+              </Group>
+
+              <Group id="GroupClassify">
+                <Label resid="GroupClassify.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.Classify.16"/>
+                  <bt:Image size="32" resid="Icon.Classify.32"/>
+                  <bt:Image size="80" resid="Icon.Classify.80"/>
+                </Icon>
+
+                <Control xsi:type="Menu" id="MenuClassify">
+                  <Label resid="Menu.Classify.Label"/>
+                  <Supertip><Title resid="Menu.Classify.Label"/><Description resid="Menu.Classify.Tip"/></Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Classify.16"/>
+                    <bt:Image size="32" resid="Icon.Classify.32"/>
+                    <bt:Image size="80" resid="Icon.Classify.80"/>
+                  </Icon>
+                  <Items>
+                    <Item id="ClassUnclass">
+                      <Label resid="Class.Unclass.Label"/>
+                      <Supertip><Title resid="Class.Unclass.Label"/><Description resid="Class.Unclass.Tip"/></Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Classify.16"/>
+                        <bt:Image size="32" resid="Icon.Classify.32"/>
+                        <bt:Image size="80" resid="Icon.Classify.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction"><FunctionName>stampUnclassified</FunctionName></Action>
+                    </Item>
+                    <Item id="ClassInternal">
+                      <Label resid="Class.Internal.Label"/>
+                      <Supertip><Title resid="Class.Internal.Label"/><Description resid="Class.Internal.Tip"/></Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Classify.16"/>
+                        <bt:Image size="32" resid="Icon.Classify.32"/>
+                        <bt:Image size="80" resid="Icon.Classify.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction"><FunctionName>stampInternal</FunctionName></Action>
+                    </Item>
+                    <Item id="ClassRestricted">
+                      <Label resid="Class.Restricted.Label"/>
+                      <Supertip><Title resid="Class.Restricted.Label"/><Description resid="Class.Restricted.Tip"/></Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Classify.16"/>
+                        <bt:Image size="32" resid="Icon.Classify.32"/>
+                        <bt:Image size="80" resid="Icon.Classify.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction"><FunctionName>stampRestricted</FunctionName></Action>
+                    </Item>
+                    <Item id="ClassConfidential">
+                      <Label resid="Class.Confid.Label"/>
+                      <Supertip><Title resid="Class.Confid.Label"/><Description resid="Class.Confid.Tip"/></Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Classify.16"/>
+                        <bt:Image size="32" resid="Icon.Classify.32"/>
+                        <bt:Image size="80" resid="Icon.Classify.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction"><FunctionName>stampConfidential</FunctionName></Action>
+                    </Item>
+                  </Items>
+                </Control>
+              </Group>
+
+              <Label resid="ThoughtronsTab.Label"/>
+            </CustomTab>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.Library.16"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/library-16.png"/>
+        <bt:Image id="Icon.Library.32"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/library-32.png"/>
+        <bt:Image id="Icon.Library.80"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/library-80.png"/>
+        <bt:Image id="Icon.Snippet.16"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/snippet-16.png"/>
+        <bt:Image id="Icon.Snippet.32"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/snippet-32.png"/>
+        <bt:Image id="Icon.Snippet.80"   DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/snippet-80.png"/>
+        <bt:Image id="Icon.Classify.16"  DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/classify-16.png"/>
+        <bt:Image id="Icon.Classify.32"  DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/classify-32.png"/>
+        <bt:Image id="Icon.Classify.80"  DefaultValue="https://thoughtrons.github.io/word-addin/assets/icons/classify-80.png"/>
+      </bt:Images>
+
+      <bt:Urls>
+        <bt:Url id="Commands.Url"            DefaultValue="https://thoughtrons.github.io/word-addin/src/commands.html"/>
+        <bt:Url id="Taskpane.Url"            DefaultValue="https://thoughtrons.github.io/word-addin/src/taskpane.html"/>
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://thoughtrons.in/"/>
+      </bt:Urls>
+
+      <bt:ShortStrings>
+        <bt:String id="ThoughtronsTab.Label"   DefaultValue="Thoughtrons"/>
+        <bt:String id="GetStarted.Title"       DefaultValue="Welcome to Thoughtrons for Word"/>
+        <bt:String id="GroupLibrary.Label"     DefaultValue="Snippet Library"/>
+        <bt:String id="GroupQuick.Label"       DefaultValue="Quick Insert"/>
+        <bt:String id="GroupClassify.Label"    DefaultValue="Classification"/>
+        <bt:String id="Btn.Library.Label"      DefaultValue="Snippet Library"/>
+        <bt:String id="Btn.ExecSum.Label"      DefaultValue="Exec Summary"/>
+        <bt:String id="Btn.ActionItems.Label"  DefaultValue="Action Items"/>
+        <bt:String id="Btn.RiskTbl.Label"      DefaultValue="Risk Table"/>
+        <bt:String id="Btn.MemoHdr.Label"      DefaultValue="Memo Header"/>
+        <bt:String id="Btn.Refs.Label"         DefaultValue="References"/>
+        <bt:String id="Menu.Classify.Label"    DefaultValue="Stamp"/>
+        <bt:String id="Class.Unclass.Label"    DefaultValue="UNCLASSIFIED"/>
+        <bt:String id="Class.Internal.Label"   DefaultValue="INTERNAL"/>
+        <bt:String id="Class.Restricted.Label" DefaultValue="RESTRICTED"/>
+        <bt:String id="Class.Confid.Label"     DefaultValue="CONFIDENTIAL"/>
+      </bt:ShortStrings>
+
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description" DefaultValue="The Thoughtrons tab gives you brand-styled snippets — Action items, Risk tables, Exec summary blocks, References — and one-click classification stamps for header &amp; footer."/>
+        <bt:String id="Btn.Library.Tip"        DefaultValue="Open the snippet library — 18 brand-styled inserts organised by category."/>
+        <bt:String id="Btn.ExecSum.Tip"        DefaultValue="Insert an Executive Summary heading + placeholder paragraph at the cursor."/>
+        <bt:String id="Btn.ActionItems.Tip"    DefaultValue="Insert a 5-column action items table at the cursor."/>
+        <bt:String id="Btn.RiskTbl.Tip"        DefaultValue="Insert a 5-column risk table at the cursor."/>
+        <bt:String id="Btn.MemoHdr.Tip"        DefaultValue="Insert a TO/FROM/DATE/SUBJECT memo header at the cursor."/>
+        <bt:String id="Btn.Refs.Tip"           DefaultValue="Insert a REFERENCES heading + placeholder citations."/>
+        <bt:String id="Menu.Classify.Tip"      DefaultValue="Stamp the document with a classification banner in header and footer of every section."/>
+        <bt:String id="Class.Unclass.Tip"      DefaultValue="Stamp UNCLASSIFIED (green)."/>
+        <bt:String id="Class.Internal.Tip"     DefaultValue="Stamp INTERNAL (orange)."/>
+        <bt:String id="Class.Restricted.Tip"   DefaultValue="Stamp RESTRICTED (red)."/>
+        <bt:String id="Class.Confid.Tip"       DefaultValue="Stamp CONFIDENTIAL (red)."/>
+      </bt:LongStrings>
+    </Resources>
+
+  </VersionOverrides>
+</OfficeApp>
