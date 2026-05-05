@@ -21,7 +21,7 @@
   xsi:type="TaskPaneApp">
 
   <Id>05cc9f6e-ca7d-4a05-9a74-5c6e08b9b8a3</Id>
-  <Version>1.0.0.1</Version>
+  <Version>1.0.0.2</Version>
   <ProviderName>Thoughtrons</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Thoughtrons Word"/>
