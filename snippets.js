@@ -75,8 +75,9 @@ async function itable(context, data, options = {}) {
   context.load(tbl, "rows/items/cells/items/body/font");
   await context.sync();
 
-  // Header row — dark fill, white mono text
-  const headerCells = tbl.rows.items[0].cells;
+  // Header row — dark fill, white mono text.
+  // Note: TableCellCollection doesn't expose forEach directly — use .items.
+  const headerCells = tbl.rows.items[0].cells.items;
   headerCells.forEach(cell => {
     cell.shadingColor = C.HEADER_FILL;
     cell.body.font.color = "#FFFFFF";
@@ -87,7 +88,7 @@ async function itable(context, data, options = {}) {
 
   // Body rows — Calibri, dark text
   for (let r = 1; r < tbl.rows.items.length; r++) {
-    const cells = tbl.rows.items[r].cells;
+    const cells = tbl.rows.items[r].cells.items;
     cells.forEach(cell => {
       cell.body.font.color = C.TEXT;
       cell.body.font.name = "Calibri";
