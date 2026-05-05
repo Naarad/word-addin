@@ -9,7 +9,7 @@
   ============================================================
   BEFORE FIRST DEPLOYMENT — REPLACE THE BASE URL
   ============================================================
-  Find:    https://naarad.github.io/word-addin/naarad.github.io/word-addin/
+  Find:    https://naarad.github.io/word-addin
   Replace: <your hosting URL — must be HTTPS, no trailing slash>
   ============================================================
 -->
@@ -20,14 +20,14 @@
   xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
   xsi:type="TaskPaneApp">
 
-  <Id>05cc9f6e-ca7d-4a05-9a74-5c6e08b9b8a3</Id>
-  <Version>1.0.0.2</Version>
+  <Id>053bc71c-7ccc-4faa-9c14-6950f7a2219b</Id>
+  <Version>2.0.0.0</Version>
   <ProviderName>Thoughtrons</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Thoughtrons Word"/>
+  <DisplayName DefaultValue="Thoughtrons Word v2"/>
   <Description DefaultValue="Brand-styled snippet library, classification stamps, and quick-insert toolbox for Thoughtrons Word documents."/>
-  <IconUrl DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/tab-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/tab-80.png"/>
+  <IconUrl DefaultValue="https://naarad.github.io/word-addin/assets/icons/tab-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://naarad.github.io/word-addin/assets/icons/tab-80.png"/>
   <SupportUrl DefaultValue="https://thoughtrons.in/"/>
 
   <AppDomains>
@@ -40,7 +40,7 @@
   </Hosts>
 
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//src/taskpane.html"/>
+    <SourceLocation DefaultValue="https://naarad.github.io/word-addin/src/taskpane.html"/>
   </DefaultSettings>
 
   <Permissions>ReadWriteDocument</Permissions>
@@ -218,20 +218,20 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.Library.16"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/library-16.png"/>
-        <bt:Image id="Icon.Library.32"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/library-32.png"/>
-        <bt:Image id="Icon.Library.80"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/library-80.png"/>
-        <bt:Image id="Icon.Snippet.16"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/snippet-16.png"/>
-        <bt:Image id="Icon.Snippet.32"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/snippet-32.png"/>
-        <bt:Image id="Icon.Snippet.80"   DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/snippet-80.png"/>
-        <bt:Image id="Icon.Classify.16"  DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/classify-16.png"/>
-        <bt:Image id="Icon.Classify.32"  DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/classify-32.png"/>
-        <bt:Image id="Icon.Classify.80"  DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//assets/icons/classify-80.png"/>
+        <bt:Image id="Icon.Library.16"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/library-16.png"/>
+        <bt:Image id="Icon.Library.32"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/library-32.png"/>
+        <bt:Image id="Icon.Library.80"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/library-80.png"/>
+        <bt:Image id="Icon.Snippet.16"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/snippet-16.png"/>
+        <bt:Image id="Icon.Snippet.32"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/snippet-32.png"/>
+        <bt:Image id="Icon.Snippet.80"   DefaultValue="https://naarad.github.io/word-addin/assets/icons/snippet-80.png"/>
+        <bt:Image id="Icon.Classify.16"  DefaultValue="https://naarad.github.io/word-addin/assets/icons/classify-16.png"/>
+        <bt:Image id="Icon.Classify.32"  DefaultValue="https://naarad.github.io/word-addin/assets/icons/classify-32.png"/>
+        <bt:Image id="Icon.Classify.80"  DefaultValue="https://naarad.github.io/word-addin/assets/icons/classify-80.png"/>
       </bt:Images>
 
       <bt:Urls>
-        <bt:Url id="Commands.Url"            DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//src/commands.html"/>
-        <bt:Url id="Taskpane.Url"            DefaultValue="https://naarad.github.io/word-addin/naarad.github.io/word-addin//src/taskpane.html"/>
+        <bt:Url id="Commands.Url"            DefaultValue="https://naarad.github.io/word-addin/src/commands.html"/>
+        <bt:Url id="Taskpane.Url"            DefaultValue="https://naarad.github.io/word-addin/src/taskpane.html"/>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://thoughtrons.in/"/>
       </bt:Urls>
 
