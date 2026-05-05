@@ -31,7 +31,7 @@
   <SupportUrl DefaultValue="https://thoughtrons.in/"/>
 
   <AppDomains>
-    <AppDomain>https://thoughtrons.github.io</AppDomain>
+    <AppDomain>https://naarad.github.io</AppDomain>
     <AppDomain>https://thoughtrons.in</AppDomain>
   </AppDomains>
 
