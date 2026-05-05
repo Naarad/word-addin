@@ -231,6 +231,286 @@ window.ThoughtronsSnippets = {
   classify_internal:     (ctx) => stampClassification(ctx, "INTERNAL",      "#FFE8C2", "#9B5A00"),
   classify_restricted:   (ctx) => stampClassification(ctx, "RESTRICTED",    "#FFD6D6", "#A12626"),
   classify_confidential: (ctx) => stampClassification(ctx, "CONFIDENTIAL",  "#FFD6D6", "#A12626"),
+
+  // ---------- Monthly updates (full-template inserts) ----------
+  monthly_update_tech:                  (ctx) => insertMonthlyUpdate(ctx, MU_TECH),
+  monthly_update_sales:                 (ctx) => insertMonthlyUpdate(ctx, MU_SALES),
+  monthly_update_commercial_compliance: (ctx) => insertMonthlyUpdate(ctx, MU_COMM_COMPLIANCE),
+  monthly_update_marketing:             (ctx) => insertMonthlyUpdate(ctx, MU_MARKETING),
+  monthly_update_bd:                    (ctx) => insertMonthlyUpdate(ctx, MU_BD),
+
+  // ---------- Full-document templates (inserted via base64 .docx) ----------
+  research_paper:        (ctx) => insertTemplate(ctx, "research_paper"),
+  proposal:              (ctx) => insertTemplate(ctx, "proposal"),
+  programme_brief:       (ctx) => insertTemplate(ctx, "programme_brief"),
+  internal_memo:         (ctx) => insertTemplate(ctx, "internal_memo"),
+  meeting_minutes:       (ctx) => insertTemplate(ctx, "meeting_minutes"),
+  monthly_report:        (ctx) => insertTemplate(ctx, "monthly_report"),
+  win_loss_analysis:     (ctx) => insertTemplate(ctx, "win_loss_analysis"),
+  press_release:         (ctx) => insertTemplate(ctx, "press_release"),
+  case_study:            (ctx) => insertTemplate(ctx, "case_study"),
+  blog_post:             (ctx) => insertTemplate(ctx, "blog_post"),
+  linkedin_post:         (ctx) => insertTemplate(ctx, "linkedin_post"),
+  campaign_plan:         (ctx) => insertTemplate(ctx, "campaign_plan"),
+};
+
+// ============================================================
+// FULL-TEMPLATE INSERTER — uses Word's insertFileFromBase64 API
+// ============================================================
+// The base64 strings live in templates.js (loaded alongside snippets.js).
+// To add a new template: add the .docx to Brand_System_v1/, add a (key, path)
+// row to encode_templates.py, run it, then register the key here + in
+// taskpane.html's LIBRARY array.
+function insertTemplate(ctx, key) {
+  const b64 = (window.ThoughtronsTemplates || {})[key];
+  if (!b64) {
+    return Promise.reject(new Error("Unknown template: " + key +
+      " — make sure templates.js is loaded and the key exists."));
+  }
+  ctx.document.body.insertFileFromBase64(b64, "End");
+  return ctx.sync();
+}
+
+// ============================================================
+// MONTHLY UPDATE BUILDER (shared by all 5 department configs)
+// ============================================================
+async function insertMonthlyUpdate(ctx, cfg) {
+  const body = ctx.document.body;
+
+  // Header
+  ieyebrow(body, `// Monthly Update / ${cfg.dept} / MONTH YYYY`);
+  ititle(body, `Monthly Update — ${cfg.deptName}.`);
+  ipara(body, "Author Name  ·  Role  ·  Period: MMM YYYY  ·  Filed: DD MMM YYYY",
+    { font: "Consolas", size: 9, color: C.TEXT2, spacingAfter: 12 });
+
+  // Meta block (4-cell table)
+  await itable(ctx, [
+    ["AUTHOR", "ROLE", "MANAGER", "PERIOD"],
+    ["Author Name", "Role / Designation", "Manager Name", "MMM YYYY"],
+  ]);
+
+  // 1. HIGHLIGHTS
+  ih1(body, "1. Highlights");
+  ipara(body, "Top 3-5 things from this month. The reader should walk away knowing what mattered after this section alone.",
+    { font: "Calibri", size: 11, italic: true, color: C.TEXT2, spacingAfter: 6 });
+  cfg.exampleHighlights.forEach(h => ibullet(body, h));
+
+  // 2. KEY NUMBERS
+  ih1(body, "2. Key Numbers");
+  ipara(body, `The four numbers that show your ${cfg.deptName.toLowerCase()} month at a glance.`,
+    { font: "Calibri", size: 11, italic: true, color: C.TEXT2, spacingAfter: 6 });
+  await itable(ctx, [
+    ["Metric", "This month", "Last month", "Δ", "Notes"],
+    [cfg.kpiLabels[0], "value", "value", "+/-X%", "One-line context"],
+    [cfg.kpiLabels[1], "value", "value", "+/-X%", "One-line context"],
+    [cfg.kpiLabels[2], "value", "value", "+/-X%", "One-line context"],
+    [cfg.kpiLabels[3], "value", "value", "+/-X%", "One-line context"],
+  ]);
+
+  // 3+ Department-specific sections
+  cfg.sections.forEach((s, i) => {
+    ih1(body, `${i + 3}. ${s.heading}`);
+    if (s.note)  ipara(body, s.note, { font: "Calibri", size: 11, italic: true, color: C.TEXT2, spacingAfter: 6 });
+    if (s.body)  ibody(body, s.body);
+    if (s.bullets) s.bullets.forEach(b => ibullet(body, b));
+  });
+
+  // Wins & Lessons
+  const n = cfg.sections.length;
+  ih1(body, `${n + 3}. Wins & Lessons`);
+  ih2(body, "What worked");
+  ibullet(body, "Specific thing one — and what about it worked.");
+  ibullet(body, "Specific thing two.");
+  ih2(body, "What didn't");
+  ibullet(body, "Specific thing one — and what you'd do differently.");
+  ibullet(body, "Specific thing two.");
+
+  // Blockers & Asks
+  ih1(body, `${n + 4}. Blockers & Asks`);
+  ipara(body, "What's preventing you from going faster — and what specifically you need from your manager / leadership / a partner team to unblock.",
+    { font: "Calibri", size: 11, italic: true, color: C.TEXT2, spacingAfter: 6 });
+  ibullet(body, "Blocker one — what you need (decision / resource / introduction / approval) — by when.");
+  ibullet(body, "Blocker two.");
+
+  // Next Month
+  ih1(body, `${n + 5}. Next Month`);
+  ipara(body, "Top 3-5 priorities for next month. Be specific enough that you can audit yourself against this list when you write next month's update.",
+    { font: "Calibri", size: 11, italic: true, color: C.TEXT2, spacingAfter: 6 });
+  ibullet(body, "Priority one — concrete, time-boxed.");
+  ibullet(body, "Priority two.");
+  ibullet(body, "Priority three.");
+
+  // Notes
+  ih1(body, `${n + 6}. Notes`);
+  ipara(body, "Anything else worth knowing — career development, leave plans, team observations, ideas you'd like time to explore.",
+    { font: "Calibri", size: 11, color: C.TEXT2 });
+
+  return ctx.sync();
+}
+
+// Helper for bulleted list items
+function ibullet(body, text) {
+  const p = body.insertParagraph(text, "End");
+  p.font.name = "Calibri";
+  p.font.size = 11;
+  p.font.color = C.TEXT;
+  p.spaceAfter = 2;
+  p.styleBuiltIn = "ListBullet";
+  return p;
+}
+
+// ============================================================
+// DEPARTMENT CONFIGS for the monthly-update snippet
+// ============================================================
+const MU_TECH = {
+  dept: "TECH", deptName: "Tech",
+  exampleHighlights: [
+    "Shipped CHAITANYA optical-design v0.3 — 8% weight reduction vs. v0.2.",
+    "Closed integration of LWIR module with the YOLOv8n detector — 17 ms inference on M3 Max.",
+    "Spun up CI for the firmware repo — reduced manual test cycles by 3 hours/week.",
+  ],
+  kpiLabels: ["Issues closed", "PRs merged", "Tests written", "Open programmes"],
+  sections: [
+    { heading: "Programmes & deliverables",
+      note: "What you shipped, on which programmes, with what evidence. One sub-section per programme you contributed to.",
+      bullets: ["Programme A — what you delivered (design, prototype, test, doc) — link to evidence.",
+                "Programme B — same.", "Programme C — same."] },
+    { heading: "Engineering quality",
+      note: "Anything that improved the quality of what we ship — tests, CI, monitoring, code review, documentation.",
+      bullets: ["Tests added / coverage delta.", "CI / tooling improvements.", "Tech debt addressed."] },
+    { heading: "Experiments & learning",
+      note: "What you tried that didn't ship — including failures. R&D progress is uneven by definition; document the negative results.",
+      body: "Free-form section. Describe what you investigated, what you learned, whether it warrants more time." },
+    { heading: "Skills & development",
+      note: "What you learned this month. Courses, papers, internal sessions, conferences, mentoring.",
+      bullets: ["Course / paper / book — what you took from it.", "Mentor sessions — with whom, on what.",
+                "Conferences / talks — attended or delivered."] },
+  ],
+};
+
+const MU_SALES = {
+  dept: "SALES", deptName: "Sales",
+  exampleHighlights: [
+    "Closed-Won DPSU-A advisory engagement — ₹3.4Cr, 6-month engagement.",
+    "Pipeline grew +38% QoQ; weighted pipeline at ₹14.2Cr.",
+    "Lost capability assessment with Client X on price — initiated learning doc.",
+  ],
+  kpiLabels: ["New leads", "Meetings held", "Proposals sent", "Closed-won (₹)"],
+  sections: [
+    { heading: "Pipeline movement",
+      note: "Deals that progressed, stalled, or shifted stage this month. Not a list of every conversation — only the consequential ones.",
+      bullets: ["Deal A — moved from Qualified → Proposal — value, expected close.",
+                "Deal B — stalled at Negotiation — what's holding it up.",
+                "Deal C — slipped expected close date — by how long, why."] },
+    { heading: "Closed deals",
+      note: "Every Closed-Won and Closed-Lost this month. For every Closed-Lost, the reason and the lesson.",
+      bullets: ["WIN — Client / programme / value / why we won.",
+                "LOSS — Client / programme / why — link to win/loss analysis doc."] },
+    { heading: "New leads & sources",
+      note: "Where this month's leads came from. Useful for reviewing channel ROI quarterly.",
+      bullets: ["Source X — count of leads — qualified count.", "Source Y — count — qualified count."] },
+    { heading: "Customer feedback themes",
+      note: "Recurring objections, requests, or signals you heard from prospects this month. Three or four themes max.",
+      body: "Theme 1: <observation, frequency, what it suggests we change>. Theme 2: <same>." },
+    { heading: "Top accounts to watch",
+      note: "Two or three accounts you'd flag for leadership attention next month.",
+      bullets: ["Account A — why it matters this month.", "Account B — why."] },
+  ],
+};
+
+const MU_COMM_COMPLIANCE = {
+  dept: "COMMERCIAL & COMPLIANCE", deptName: "Commercial & Compliance",
+  exampleHighlights: [
+    "Closed FOSS MoU — partnership terms favourable to Thoughtrons IP.",
+    "Passed annual data-protection audit — zero findings.",
+    "Renewed three vendor contracts; exited one on poor performance.",
+  ],
+  kpiLabels: ["Contracts processed", "Compliance items closed", "Audits cleared", "Vendor reviews"],
+  sections: [
+    { heading: "Contracts & legal",
+      note: "Every contract that started, was renewed, amended, or terminated this month.",
+      bullets: ["New — counterparty / type / value / key term.", "Renewed — counterparty / changes.",
+                "Terminated / exited — counterparty / reason."] },
+    { heading: "Compliance status",
+      note: "DPP / certifications / audits / regulatory requirements. RAG status against each.",
+      bullets: ["DPP — current status — next gate.", "ISO / quality cert — current status — next audit.",
+                "Data protection — items closed / open."] },
+    { heading: "Vendor & supplier management",
+      note: "Onboarded vendors, off-boarded vendors, performance reviews completed.",
+      bullets: ["Vendor A — review outcome.", "Vendor B — onboarded / off-boarded."] },
+    { heading: "Procurement & cost",
+      note: "Major procurement decisions, cost variances vs. plan, savings realised.",
+      body: "Free-form. Material POs, cost surprises, savings, budget pressure points." },
+    { heading: "Regulatory & policy updates",
+      note: "Changes in MoD / DPP / export-control / data policy that affect Thoughtrons. One paragraph per relevant change.",
+      body: "Update 1: <what changed, our exposure, action we're taking>." },
+    { heading: "Risk register changes",
+      note: "Risks added, retired, or re-scored this month. Link to the Risk Register file.",
+      bullets: ["Added — risk description / score.", "Retired — what changed.",
+                "Re-scored — old score → new score, why."] },
+  ],
+};
+
+const MU_MARKETING = {
+  dept: "MARKETING", deptName: "Marketing",
+  exampleHighlights: [
+    "Published 3 long-form posts; LinkedIn impressions +52% MoM.",
+    "Press pickup in Industry Today — 'Mil-tech 25-under-25' feature.",
+    "DefExpo booth 80% planned — demo unit and collateral on track.",
+  ],
+  kpiLabels: ["Content published", "Reach (impressions)", "Engagement rate", "Press pickups"],
+  sections: [
+    { heading: "Content published",
+      note: "By channel. Counts and link to each piece.",
+      bullets: ["Website / blog — count — top performer + URL.", "LinkedIn — count — top performer.",
+                "Other channels — count."] },
+    { heading: "Campaigns",
+      note: "Active or completed campaigns — goal, audience, outcome vs. target.",
+      bullets: ["Campaign A — goal / audience / status / metric vs. target.", "Campaign B — same."] },
+    { heading: "Press & media coverage",
+      note: "Earned press, podcast appearances, third-party features. Inbound interview requests too.",
+      bullets: ["Outlet — date — angle — reach estimate.",
+                "Pending requests — what we said yes / no to and why."] },
+    { heading: "Events & exhibitions",
+      note: "Events worked on this month — pre-event prep, on-site activities, post-event follow-up.",
+      bullets: ["Event A — phase — what was done — what's next."] },
+    { heading: "Brand assets & website",
+      note: "Updates to deck templates, brand guide, website. Anything the rest of the org now has access to.",
+      body: "What was created / updated, and where to find it." },
+    { heading: "Social engagement themes",
+      note: "Recurring comments / DMs / requests on our channels this month. Useful for content team and product team.",
+      body: "Theme 1: <observation>. Theme 2: <observation>." },
+  ],
+};
+
+const MU_BD = {
+  dept: "BD", deptName: "BD",
+  exampleHighlights: [
+    "Signed MoU with FOSS — joint go-to-market on thermal sensor integration.",
+    "DPSU-A: champion identified; programme XYZ on radar for FY27 budget.",
+    "Attended DefExpo briefing — 4 conversations qualified, 1 pushed to Sales as lead.",
+  ],
+  kpiLabels: ["Active partners", "MoUs signed", "Strategic accounts engaged", "Govt / DPSU touchpoints"],
+  sections: [
+    { heading: "Partnership pipeline",
+      note: "Status by partner. Different from sales pipeline — these are joint-venture / MoU / co-development relationships.",
+      bullets: ["Partner A — stage — what's pending — owner.", "Partner B — stage."] },
+    { heading: "New partner conversations",
+      note: "First-touch conversations with potential partners this month. Even if they go nowhere, log them.",
+      bullets: ["Org X — context of intro — outcome — follow-up.", "Org Y — same."] },
+    { heading: "Strategic accounts",
+      note: "DPSUs, primes, large customers — engagement update per account. Link to Account Maps.",
+      bullets: ["Account 1 — change in champion / blocker / programme this month.", "Account 2 — change."] },
+    { heading: "Government & DPSU engagement",
+      note: "Briefings, RFP awareness, programme intelligence, policy interactions.",
+      bullets: ["Engagement A — context, outcome.", "Engagement B — same."] },
+    { heading: "Conferences & industry events",
+      note: "Events you attended or spoke at this month. What was learned, who was met.",
+      bullets: ["Event A — leads / partners / intelligence collected.", "Event B — same."] },
+    { heading: "Programme tie-ins",
+      note: "Which Thoughtrons programmes (CHAITANYA, RAKESH, etc.) BD work supported this month, and what surfaced.",
+      body: "Programme X: <BD activity, what it surfaced, programme team action>." },
+  ],
 };
 
 async function stampClassification(ctx, label, fill, fg) {
